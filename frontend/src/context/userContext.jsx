@@ -33,19 +33,19 @@ export const UserProvider = ({ children }) => {
   const updateUser = (userData) => {
     setUser(userData);
     if (userData.token) localStorage.setItem("accessToken", userData.token);
+    // localStorage.setItem("user", JSON.stringify(userData)); // optional, only if needed
     setLoading(false);
   };
 
   const clearUserData = () => {
     setUser(null);
     localStorage.removeItem("accessToken");
-    localStorage.removeItem("user");
+    // localStorage.removeItem("user"); // remove if unused
   };
 
   return (
-  <UserContext.Provider value={{ user, loading, updateUser, clearUserData }}>
-    {children}
-  </UserContext.Provider>
-);
-
+    <UserContext.Provider value={{ user, loading, updateUser, clearUserData }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
