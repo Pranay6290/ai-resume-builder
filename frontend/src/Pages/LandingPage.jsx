@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, LayoutTemplate, Menu, X, Zap, Download } from "lucide-react"; 
 import { landingPageStyles } from "../assets/dummystyle";
-import { UserContext } from "../context/UserContext"; 
+import { UserContext } from "../context/userContext"; 
 import Modal from "../components/Modal";
 import Login from "../components/Login";          // Fixed casing
 import SignUp from "../components/SignUp";        // Fixed casing
