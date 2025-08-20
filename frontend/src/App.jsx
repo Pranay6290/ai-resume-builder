@@ -4,7 +4,7 @@ import LandingPage from "./Pages/LandingPage";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import Dashboard from "./Pages/Dashboard";
-import { UserProvider } from "./context/UserContext";
+import { UserProvider } from "./context/userContext";
 import EditResume from "./components/EditResume";
 import { Toaster } from "react-hot-toast";
 
