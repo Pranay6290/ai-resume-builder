@@ -1,0 +1,51 @@
+import React, { useEffect, useState, createContext } from "react";
+import axiosInstance from "../utils/axiosInstance";
+import { API_PATHS } from "../utils/apiPaths";
+
+export const UserContext = createContext();
+
+export const UserProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchUser = async () => {
+      try {
+        const response = await axiosInstance.get(API_PATHS.AUTH.GET_PROFILE);
+        setUser(response.data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        clearUserData();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  const updateUser = (userData) => {
+    setUser(userData);
+    if (userData.token) localStorage.setItem("accessToken", userData.token);
+    setLoading(false);
+  };
+
+  const clearUserData = () => {
+    setUser(null);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
+  };
+
+  return (
+  <UserContext.Provider value={{ user, loading, updateUser, clearUserData }}>
+    {children}
+  </UserContext.Provider>
+);
+
+};
