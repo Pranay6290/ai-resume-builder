@@ -1,6 +1,15 @@
-# 🚀 AI Resume Builder - Next Level
+# 🤖 AI Resume Builder - Full Stack Application
 
-A comprehensive, modern resume builder application with advanced theming, live preview, and professional export capabilities.
+A modern, AI-powered resume builder featuring intelligent content generation, real-time preview, and professional templates. Built with React, Node.js, MongoDB, and Google Gemini AI.
+
+## 🌟 **Live Demo**
+- **Frontend**: [Deployed on Render](https://ai-resume-builder-frontend.onrender.com)
+- **Backend API**: [API Endpoint](https://ai-resume-builder-backend.onrender.com)
+
+## 🛠️ **Tech Stack**
+- **Frontend**: React 19, Vite, Tailwind CSS, Axios
+- **Backend**: Node.js, Express.js, MongoDB, JWT, Google Gemini AI
+- **Deployment**: Render (Full-stack deployment)
 
 ## ✨ Features
 
