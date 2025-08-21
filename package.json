@@ -1,7 +1,7 @@
 {
-  "name": "ai-resume-builder-backend",
+  "name": "ai-resume-builder-fullstack",
   "version": "1.0.0",
-  "description": "AI Resume Builder - Backend (Node.js + Express)",
+  "description": "AI Resume Builder - Full-stack application with React frontend and Node.js backend",
   "private": true,
   "type": "module",
   "engines": {
@@ -9,10 +9,15 @@
     "npm": ">=8.0.0"
   },
   "scripts": {
-    "start": "node backend/server.js",
-    "dev": "cd backend && npm run dev",
     "install-backend": "cd backend && npm install",
-    "postinstall": "npm run install-backend"
+    "install-frontend": "cd frontend && npm install",
+    "install-all": "npm run install-backend && npm run install-frontend",
+    "build-backend": "cd backend && npm run build",
+    "build-frontend": "cd frontend && npm run build",
+    "build": "npm run build-frontend",
+    "start": "cd backend && npm start",
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "postinstall": "npm run install-all"
   },
   "dependencies": {
     "concurrently": "^8.2.2"
@@ -20,11 +25,11 @@
   "keywords": [
     "resume-builder",
     "ai",
+    "react",
     "nodejs",
-    "express",
     "mongodb",
     "gemini-ai",
-    "backend"
+    "fullstack"
   ],
   "author": "Pranay Gupta",
   "license": "MIT"
