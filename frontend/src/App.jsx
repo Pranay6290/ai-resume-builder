@@ -12,6 +12,7 @@ import EditResume from "./components/EditResume";
 import SharedResume from "./Pages/SharedResume";
 import { Toaster } from "react-hot-toast";
 import { initPerformanceOptimizations } from "./utils/performance";
+import APITest from "./components/APITest"; // Debug component
 import "./styles/animations.css";
 
 function App() {
@@ -47,6 +48,8 @@ function App() {
           position="top-right"
           reverseOrder={false}
         />
+        {/* Debug component - remove after testing */}
+        <APITest />
         </UserProvider>
       </ThemeProvider>
     </DarkModeProvider>

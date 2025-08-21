@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../context/userContext";
 import axiosInstance from "../utils/axiosInstance";
+import { API_PATHS } from "../utils/apiPaths";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,6 +18,9 @@ const Login = () => {
   const handleSubmit = async (e) => {
   e.preventDefault();
   setError("");
+
+  console.log('🔐 Login attempt:', { email, backend: API_PATHS.AUTH.LOGIN });
+
   try {
     const res = await axiosInstance.post("/api/auth/login", { email, password });
 

@@ -1,10 +1,18 @@
-export const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
+// Force production backend URL for deployment
+const PRODUCTION_BACKEND_URL = "https://ai-resume-builder-5qok.onrender.com";
+const DEVELOPMENT_BACKEND_URL = "http://localhost:4000";
+
+// Use production URL if in production or if environment variable is not set correctly
+export const BASE_URL = import.meta.env.MODE === 'production'
+  ? PRODUCTION_BACKEND_URL
+  : (import.meta.env.VITE_API_BASE_URL || DEVELOPMENT_BACKEND_URL);
 
 // Debug logging for production
 console.log('🔧 API Configuration:');
+console.log('Environment Mode:', import.meta.env.MODE);
 console.log('VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL);
-console.log('BASE_URL:', BASE_URL);
-console.log('Environment:', import.meta.env.MODE);
+console.log('Final BASE_URL:', BASE_URL);
+console.log('All env vars:', import.meta.env);
 
 // routes used for frontend
 export const API_PATHS = {
