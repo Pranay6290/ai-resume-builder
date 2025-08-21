@@ -28,7 +28,7 @@ const corsOptions = {
       process.env.CORS_ORIGIN,
       process.env.FRONTEND_URL,
       // Add your deployed frontend URLs here
-      'https://ai-resume-builder-2-pqet.onrender.com/',
+      'https://ai-resume-builder-2-pqet.onrender.com',
     ].filter(Boolean); // Remove undefined values
 
     if (allowedOrigins.indexOf(origin) !== -1) {
