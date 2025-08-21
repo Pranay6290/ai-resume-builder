@@ -8,6 +8,11 @@
 const BACKEND_URL = 'https://ai-resume-builder-5qok.onrender.com';
 const FRONTEND_URL = 'https://ai-resume-builder-2-pqet.onrender.com';
 
+console.log('🔧 Testing Configuration:');
+console.log('Backend URL:', BACKEND_URL);
+console.log('Frontend URL:', FRONTEND_URL);
+console.log('');
+
 console.log('🔍 Testing Backend API...');
 console.log('========================');
 console.log(`Backend URL: ${BACKEND_URL}`);
