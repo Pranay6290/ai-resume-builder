@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import { API_PATHS } from "../utils/apiPaths";
 import { LucideFilePlus, LucideTrash2, Search, Filter, Grid, List, Download, Share2, Plus, Sparkles, Upload, FileText } from "lucide-react";
-import { extractTextFromFile, parseResumeContent } from "../utils/resumeExtractor";
+import { extractAndParseResume } from "../utils/resumeExtractor";
 import { ResumeSummaryCard } from "../components/Cards";
 import toast from "react-hot-toast";
 import moment from "moment";
@@ -299,36 +299,24 @@ const handleUploadResume = async (event) => {
     setUploadProgress(20);
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    // Step 2: Extract text content
+    // Step 2: Extract and parse content using enhanced AI
     setUploadStep('Analyzing document structure...');
     setUploadProgress(40);
-    const extractedText = await extractTextFromFile(file);
+    await new Promise(resolve => setTimeout(resolve, 400));
 
-    // Step 3: Parse content
     setUploadStep('Extracting personal information...');
     setUploadProgress(60);
     await new Promise(resolve => setTimeout(resolve, 300));
 
-    setUploadStep('Processing work experience...');
+    setUploadStep('Processing work experience and skills...');
     setUploadProgress(80);
     await new Promise(resolve => setTimeout(resolve, 300));
 
     setUploadStep('Finalizing resume data...');
     setUploadProgress(95);
-    await new Promise(resolve => setTimeout(resolve, 200));
 
-    // Parse the extracted content into structured data
-    const fileName = file.name.replace(/\.[^/.]+$/, "");
-    const parsedData = parseResumeContent(extractedText, fileName);
-
-    // Create resume data with extracted content
-    const newResumeData = {
-      ...parsedData,
-      template: {
-        id: "01",
-        theme: "professional"
-      }
-    };
+    // Use enhanced extraction with AI parsing
+    const newResumeData = await extractAndParseResume(file);
 
     // Calculate completion percentage based on actual content
     const calculatedCompletion = calculateCompletion(newResumeData);

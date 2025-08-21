@@ -14,6 +14,19 @@ export const registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
+        // Validate required fields
+        if (!name || !email || !password) {
+            return res.status(400).json({
+                message: 'Please provide name, email, and password'
+            });
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: 'Please provide a valid email address' });
+        }
+
         const userExists = await User.findOne({email});
         if (userExists) {
             return res.status(400).json({ message: 'User already exists' });
@@ -37,7 +50,11 @@ export const registerUser = async (req, res) => {
 });
 
     } catch (error) {
-        res.status(500).json({ message: 'Error registering user', error });
+        console.error('Registration error:', error);
+        res.status(500).json({
+            message: 'Error registering user',
+            error: error.message || error
+        });
     }
 };
 

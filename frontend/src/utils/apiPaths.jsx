@@ -17,10 +17,5 @@ export const API_PATHS = {
     DELETE: (id) => `${BASE_URL}/api/resumes/${id}`,      // DELETE → delete resume by ID
     UPLOAD_IMAGES: (id) => `${BASE_URL}/api/resumes/${id}/upload-images`, // POST/PUT → upload images
     AI_GENERATE: `${BASE_URL}/api/resumes/ai-generate`,   // POST → AI generate resume
-}
-,
-
-  IMAGE: {
-    UPLOAD: `${BASE_URL}/api/image/upload`,
   },
 };

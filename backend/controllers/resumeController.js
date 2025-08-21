@@ -2,10 +2,81 @@ import Resume from "../models/resumeModels.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { generateResumeWithGemini } from "../services/geminiAI.js";
 
 // Fix __dirname for ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Helper function to calculate resume completion percentage
+const calculateResumeCompletion = (resumeData) => {
+  if (!resumeData) return 0;
+
+  const weights = {
+    profileInfo: 25,
+    contactInfo: 20,
+    workExperience: 25,
+    education: 15,
+    skills: 10,
+    projects: 5
+  };
+
+  let totalScore = 0;
+
+  // Profile Info (25%)
+  if (resumeData.profileInfo) {
+    let profileScore = 0;
+    if (resumeData.profileInfo.fullName?.trim()) profileScore += 8;
+    if (resumeData.profileInfo.designation?.trim()) profileScore += 7;
+    if (resumeData.profileInfo.summary?.trim() && resumeData.profileInfo.summary.length > 50) profileScore += 10;
+    totalScore += Math.min(profileScore, weights.profileInfo);
+  }
+
+  // Contact Info (20%)
+  if (resumeData.contactInfo) {
+    let contactScore = 0;
+    if (resumeData.contactInfo.email?.trim()) contactScore += 8;
+    if (resumeData.contactInfo.phone?.trim()) contactScore += 6;
+    if (resumeData.contactInfo.location?.trim()) contactScore += 6;
+    totalScore += Math.min(contactScore, weights.contactInfo);
+  }
+
+  // Work Experience (25%)
+  if (resumeData.workExperience?.length > 0) {
+    const validExperiences = resumeData.workExperience.filter(exp =>
+      exp.company?.trim() && exp.role?.trim() && exp.description?.trim()
+    );
+    const experienceScore = Math.min(validExperiences.length * 8, weights.workExperience);
+    totalScore += experienceScore;
+  }
+
+  // Education (15%)
+  if (resumeData.education?.length > 0) {
+    const validEducation = resumeData.education.filter(edu =>
+      edu.degree?.trim() && edu.institution?.trim()
+    );
+    const educationScore = Math.min(validEducation.length * 7, weights.education);
+    totalScore += educationScore;
+  }
+
+  // Skills (10%)
+  if (resumeData.skills?.length > 0) {
+    const validSkills = resumeData.skills.filter(skill => skill.name?.trim());
+    const skillsScore = Math.min(validSkills.length * 2, weights.skills);
+    totalScore += skillsScore;
+  }
+
+  // Projects (5%)
+  if (resumeData.projects?.length > 0) {
+    const validProjects = resumeData.projects.filter(project =>
+      project.title?.trim() && project.description?.trim()
+    );
+    const projectsScore = Math.min(validProjects.length * 2.5, weights.projects);
+    totalScore += projectsScore;
+  }
+
+  return Math.round(Math.min(totalScore, 100));
+};
 
 // Create a new resume
 const createResume = async (req, res) => {
@@ -21,8 +92,23 @@ const createResume = async (req, res) => {
       projects,
       certifications,
       languages,
-      interests
+      interests,
+      completion
     } = req.body;
+
+    // Calculate completion percentage
+    const resumeData = {
+      profileInfo,
+      contactInfo,
+      workExperience,
+      education,
+      skills,
+      projects,
+      certifications,
+      languages,
+      interests
+    };
+    const calculatedCompletion = calculateResumeCompletion(resumeData);
 
     const resume = new Resume({
       userId: req.user._id,
@@ -36,7 +122,8 @@ const createResume = async (req, res) => {
       projects,
       certifications,
       languages,
-      interests
+      interests,
+      completion: completion || calculatedCompletion
     });
 
     await resume.save();
@@ -76,9 +163,13 @@ const getResumeById = async (req, res) => {
 // Update a resume
 const updateResume = async (req, res) => {
   try {
+    // Calculate completion percentage before updating
+    const updatedData = { ...req.body };
+    updatedData.completion = calculateResumeCompletion(updatedData);
+
     const resume = await Resume.findOneAndUpdate(
       { _id: req.params.id, userId: req.user._id },
-      req.body,
+      updatedData,
       { new: true }
     );
     if (!resume) return res.status(404).json({ message: "Resume not found" });
@@ -147,218 +238,54 @@ const generateAIResume = async (req, res) => {
     const userId = req.user._id;
 
     if (!userInput || userInput.trim().length === 0) {
-      return res.status(400).json({ message: "User input is required" });
+      return res.status(400).json({ message: "User input is required for AI resume generation" });
     }
 
-    // Parse user input into resume data
-    const aiGeneratedData = parseUserInputToResumeData(userInput);
+    console.log('Generating AI resume for user:', userId);
+    console.log('User input:', userInput);
 
-    // Create the resume with AI-generated data
-    const newResume = new Resume({
+    // Generate resume using Gemini AI
+    const aiGeneratedData = await generateResumeWithGemini(userInput);
+
+    // Calculate completion for AI-generated data
+    const calculatedCompletion = calculateResumeCompletion(aiGeneratedData);
+
+    // Add user ID, completion, and timestamps
+    const resumeData = {
       userId,
       ...aiGeneratedData,
+      completion: calculatedCompletion,
       createdAt: new Date(),
       updatedAt: new Date()
-    });
+    };
 
+    // Create the resume with AI-generated data
+    const newResume = new Resume(resumeData);
     const savedResume = await newResume.save();
-    res.status(201).json(savedResume);
+
+    console.log('AI resume generated successfully:', savedResume._id);
+
+    res.status(201).json({
+      message: "AI resume generated successfully",
+      resume: savedResume
+    });
 
   } catch (error) {
     console.error("Error generating AI resume:", error);
-    res.status(500).json({ message: "Failed to generate AI resume", error: error.message });
+    res.status(500).json({
+      message: "Failed to generate AI resume",
+      error: error.message
+    });
   }
 };
 
-// Helper function to parse user input into resume data
-const parseUserInputToResumeData = (input) => {
-  const words = input.toLowerCase();
+// Old helper functions removed - now using Gemini AI service
 
-  return {
-    title: `AI Generated Resume - ${new Date().toLocaleDateString()}`,
-    profileInfo: {
-      fullName: extractName(input) || "Professional Name",
-      designation: extractRole(words) || "Professional",
-      summary: generateSummary(input)
-    },
-    contactInfo: {
-      email: extractEmail(input) || "professional@email.com",
-      phone: extractPhone(input) || "+1 (555) 123-4567",
-      location: extractLocation(input) || "City, State"
-    },
-    workExperience: generateWorkExperience(words),
-    education: generateEducation(words),
-    skills: generateSkills(words),
-    projects: generateProjects(words),
-    certifications: [],
-    languages: [{ name: "English", proficiency: "Native" }],
-    interests: generateInterests(words),
-    template: {
-      id: "01",
-      theme: "01",
-      colorPalette: []
-    }
-  };
-};
+// All helper functions moved to Gemini AI service
 
-// Helper functions for AI parsing
-const extractName = (input) => {
-  const namePatterns = [/my name is ([a-zA-Z\s]+)/i, /i'm ([a-zA-Z\s]+)/i, /i am ([a-zA-Z\s]+)/i];
-  for (const pattern of namePatterns) {
-    const match = input.match(pattern);
-    if (match) return match[1].trim();
-  }
-  return null;
-};
 
-const extractRole = (words) => {
-  const roles = {
-    'software engineer': 'Software Engineer',
-    'developer': 'Software Developer',
-    'frontend': 'Frontend Developer',
-    'backend': 'Backend Developer',
-    'fullstack': 'Full Stack Developer',
-    'marketing': 'Marketing Professional',
-    'designer': 'Designer',
-    'manager': 'Manager',
-    'analyst': 'Business Analyst'
-  };
 
-  for (const [key, value] of Object.entries(roles)) {
-    if (words.includes(key)) return value;
-  }
-  return 'Professional';
-};
 
-const generateSummary = (input) => {
-  const sentences = input.split('.').filter(s => s.trim().length > 10);
-  return sentences.slice(0, 3).join('. ') + '.';
-};
-
-const extractEmail = (input) => {
-  const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/;
-  const match = input.match(emailRegex);
-  return match ? match[0] : null;
-};
-
-const extractPhone = (input) => {
-  const phoneRegex = /(\+?1[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})/;
-  const match = input.match(phoneRegex);
-  return match ? match[0] : null;
-};
-
-const extractLocation = (input) => {
-  const locationPatterns = [/in ([a-zA-Z\s,]+)/i, /from ([a-zA-Z\s,]+)/i, /located in ([a-zA-Z\s,]+)/i];
-  for (const pattern of locationPatterns) {
-    const match = input.match(pattern);
-    if (match) return match[1].trim();
-  }
-  return null;
-};
-
-const generateWorkExperience = (words) => {
-  const experienceYears = extractYearsOfExperience(words);
-  const role = extractRole(words);
-
-  return [{
-    jobTitle: role,
-    companyName: "Previous Company",
-    startDate: new Date(new Date().getFullYear() - experienceYears, 0).toISOString(),
-    endDate: new Date().toISOString(),
-    isCurrentJob: true,
-    responsibilities: [
-      "Led development of key features and improvements",
-      "Collaborated with cross-functional teams",
-      "Delivered high-quality solutions on time"
-    ]
-  }];
-};
-
-const extractYearsOfExperience = (words) => {
-  const yearMatches = words.match(/(\d+)\s*years?/);
-  return yearMatches ? parseInt(yearMatches[1]) : 2;
-};
-
-const generateEducation = (words) => {
-  const degrees = {
-    'computer science': 'Bachelor of Science in Computer Science',
-    'business': 'Bachelor of Business Administration',
-    'marketing': 'Bachelor of Marketing',
-    'engineering': 'Bachelor of Engineering',
-    'design': 'Bachelor of Design'
-  };
-
-  let degree = 'Bachelor of Science';
-  for (const [key, value] of Object.entries(degrees)) {
-    if (words.includes(key)) {
-      degree = value;
-      break;
-    }
-  }
-
-  return [{
-    institutionName: "University Name",
-    degree: degree,
-    fieldOfStudy: "Relevant Field",
-    startDate: new Date(2018, 8).toISOString(),
-    endDate: new Date(2022, 4).toISOString(),
-    grade: "3.7 GPA"
-  }];
-};
-
-const generateSkills = (words) => {
-  const skillsMap = {
-    'react': 'React',
-    'javascript': 'JavaScript',
-    'python': 'Python',
-    'node': 'Node.js',
-    'html': 'HTML',
-    'css': 'CSS',
-    'sql': 'SQL',
-    'git': 'Git',
-    'aws': 'AWS',
-    'docker': 'Docker',
-    'marketing': 'Digital Marketing',
-    'photoshop': 'Adobe Photoshop'
-  };
-
-  const detectedSkills = [];
-  for (const [key, value] of Object.entries(skillsMap)) {
-    if (words.includes(key)) {
-      detectedSkills.push({
-        name: value,
-        progress: Math.floor(Math.random() * 30) + 70
-      });
-    }
-  }
-
-  if (detectedSkills.length === 0) {
-    detectedSkills.push(
-      { name: 'Communication', progress: 90 },
-      { name: 'Problem Solving', progress: 85 },
-      { name: 'Teamwork', progress: 88 }
-    );
-  }
-
-  return detectedSkills;
-};
-
-const generateProjects = (words) => {
-  return [{
-    title: "Professional Project",
-    description: "Developed and implemented a comprehensive solution that improved efficiency and user experience.",
-    technologies: ["Technology 1", "Technology 2"],
-    startDate: new Date(2023, 0).toISOString(),
-    endDate: new Date(2023, 6).toISOString(),
-    projectLink: "",
-    githubLink: ""
-  }];
-};
-
-const generateInterests = (words) => {
-  const commonInterests = ['Technology', 'Innovation', 'Learning', 'Problem Solving'];
-  return commonInterests.slice(0, 3);
-};
 
 export {
   createResume,

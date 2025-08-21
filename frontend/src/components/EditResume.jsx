@@ -686,6 +686,14 @@ const fetchResumeDetailsById = async () => {
           setCurrentTheme(resumeInfo.template.theme);
         }
 
+        // Set completion percentage from loaded data or calculate it
+        if (resumeInfo?.completion !== undefined) {
+          setCompletionPercentage(resumeInfo.completion);
+        } else {
+          // Calculate completion for resumes without stored completion
+          setTimeout(() => calculateCompletion(), 100);
+        }
+
         showSuccessToast("Resume loaded successfully!");
       } else {
         showErrorToast("Resume data not found");

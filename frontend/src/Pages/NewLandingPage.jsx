@@ -75,26 +75,53 @@ const NewLandingPage = () => {
   ];
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${
+    <div className={`min-h-screen transition-all duration-500 relative overflow-hidden ${
       isDarkMode
-        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'
+        ? 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900'
         : 'bg-gradient-to-br from-violet-50 via-white to-fuchsia-50'
     }`}>
-      {/* Header */}
-      <header className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-lg border-b transition-colors duration-300 ${
+      {/* Animated Background Elements for Dark Mode */}
+      {isDarkMode && (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-800/20 via-blue-800/20 to-indigo-800/20 animate-pulse"></div>
+          <div className="absolute top-0 left-0 w-full h-full">
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl animate-float"></div>
+            <div className="absolute top-3/4 right-1/4 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl animate-float-delayed"></div>
+            <div className="absolute bottom-1/4 left-1/3 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl animate-float-slow"></div>
+          </div>
+        </>
+      )}
+
+      {/* Gradient Overlay for Enhanced Visual Appeal */}
+      <div className={`absolute inset-0 transition-opacity duration-500 ${
         isDarkMode
-          ? 'bg-gray-900/80 border-gray-700'
+          ? 'bg-gradient-to-t from-slate-900/50 via-transparent to-purple-900/30'
+          : 'bg-gradient-to-t from-white/20 via-transparent to-violet-100/30'
+      }`}></div>
+
+      {/* Content Container */}
+      <div className="relative z-10">
+      {/* Enhanced Header */}
+      <header className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b transition-all duration-500 ${
+        isDarkMode
+          ? 'bg-slate-900/90 border-purple-500/20 shadow-lg shadow-purple-500/10'
           : 'bg-white/80 border-gray-200'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center gap-3 animate-fade-in-up">
-              <div className="w-10 h-10 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-xl flex items-center justify-center">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                isDarkMode
+                  ? 'bg-gradient-to-r from-purple-600 to-blue-600 shadow-lg shadow-purple-500/25'
+                  : 'bg-gradient-to-r from-violet-600 to-fuchsia-600'
+              }`}>
                 <LayoutTemplate className="text-white" size={20} />
               </div>
-              <span className={`text-xl font-black transition-colors duration-300 ${
-                isDarkMode ? 'text-white' : 'text-gray-900'
+              <span className={`text-xl font-black transition-all duration-300 ${
+                isDarkMode
+                  ? 'text-transparent bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text'
+                  : 'text-gray-900'
               }`}>
                 AI Resume Builder
               </span>
@@ -239,13 +266,20 @@ const NewLandingPage = () => {
         )}
       </header>
 
-      {/* Hero Section */}
+      {/* Enhanced Hero Section */}
       <main className="pt-16">
-        <section className={`relative overflow-hidden py-20 lg:py-32 transition-colors duration-300 ${
+        <section className={`relative overflow-hidden py-20 lg:py-32 transition-all duration-500 ${
           isDarkMode
-            ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'
+            ? 'bg-gradient-to-br from-slate-900/50 via-purple-900/30 to-slate-900/50'
             : 'bg-gradient-to-br from-violet-50 via-white to-fuchsia-50'
         }`}>
+          {/* Additional animated elements for dark mode */}
+          {isDarkMode && (
+            <div className="absolute inset-0">
+              <div className="absolute top-1/3 left-1/2 w-72 h-72 bg-purple-600/5 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute bottom-1/3 right-1/2 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+            </div>
+          )}
           {/* Background Elements */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-violet-400 to-fuchsia-400 rounded-full opacity-10 animate-pulse"></div>
@@ -257,29 +291,49 @@ const NewLandingPage = () => {
               {/* Left Content */}
               <div className={`space-y-8 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
                 <div className="space-y-6">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-violet-100 text-violet-700 rounded-full text-sm font-medium animate-bounce">
-                    <Sparkles size={16} />
+                  <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium animate-bounce transition-all duration-300 ${
+                    isDarkMode
+                      ? 'bg-purple-900/30 text-purple-300 border border-purple-500/30'
+                      : 'bg-violet-100 text-violet-700'
+                  }`}>
+                    <Sparkles size={16} className={isDarkMode ? 'text-purple-400' : ''} />
                     <span>AI-Powered Resume Builder</span>
                   </div>
-                  
-                  <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-tight">
+
+                  <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-black leading-tight transition-all duration-300 ${
+                    isDarkMode ? 'text-white' : 'text-gray-900'
+                  }`}>
                     Build Professional
-                    <span className="bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent"> Resumes </span>
+                    <span className={`bg-clip-text text-transparent ${
+                      isDarkMode
+                        ? 'bg-gradient-to-r from-purple-400 to-blue-400'
+                        : 'bg-gradient-to-r from-violet-600 to-fuchsia-600'
+                    }`}> Resumes </span>
                     with AI
                   </h1>
 
-                  <p className="text-xl text-gray-600 leading-relaxed">
+                  <p className={`text-xl leading-relaxed transition-colors duration-300 ${
+                    isDarkMode ? 'text-gray-300' : 'text-gray-600'
+                  }`}>
                     A modern resume builder featuring AI-powered optimization, ATS compatibility checking,
                     and professional templates. Built as a portfolio project showcasing full-stack development skills.
                   </p>
                 </div>
 
-                {/* Stats */}
+                {/* Enhanced Stats */}
                 <div className="grid grid-cols-4 gap-6">
                   {stats.map((stat, index) => (
-                    <div key={index} className="text-center animate-fade-in-up" style={{ animationDelay: `${index * 200}ms` }}>
-                      <div className="text-2xl font-bold text-gray-900">{stat.number}</div>
-                      <div className="text-sm text-gray-600">{stat.label}</div>
+                    <div key={index} className={`text-center animate-fade-in-up transition-all duration-300 ${
+                      isDarkMode ? 'hover:bg-purple-900/20 rounded-lg p-3' : ''
+                    }`} style={{ animationDelay: `${index * 200}ms` }}>
+                      <div className={`text-2xl font-bold transition-colors duration-300 ${
+                        isDarkMode
+                          ? 'text-white bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent'
+                          : 'text-gray-900'
+                      }`}>{stat.number}</div>
+                      <div className={`text-sm transition-colors duration-300 ${
+                        isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                      }`}>{stat.label}</div>
                     </div>
                   ))}
                 </div>
@@ -630,6 +684,7 @@ const NewLandingPage = () => {
           </div>
         </div>
       </footer>
+      </div>
     </div>
   );
 };

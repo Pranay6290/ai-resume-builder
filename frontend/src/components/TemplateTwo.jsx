@@ -37,9 +37,9 @@ const TemplateTwo = ({ resumeData = {}, containerWidth }) => {
       style={{
         transform: containerWidth > 0 ? `scale(${scale})` : undefined,
         transformOrigin: "top left",
-        width: containerWidth > 0 ? `${baseWidth}px` : "210mm",
+        width: containerWidth > 0 ? `${baseWidth}px` : "100%",
         minHeight: "297mm",
-        maxWidth: "210mm",
+        maxWidth: "100%",
         overflow: "hidden",
         wordWrap: "break-word",
         overflowWrap: "break-word",

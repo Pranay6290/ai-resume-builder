@@ -304,14 +304,8 @@ export const initPerformanceOptimizations = () => {
     setTimeout(analyzeBundleSize, 1000);
   }
   
-  // Monitor Core Web Vitals
-  if ('web-vital' in window) {
-    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-      getCLS(console.log);
-      getFID(console.log);
-      getFCP(console.log);
-      getLCP(console.log);
-      getTTFB(console.log);
-    });
+  // Monitor Core Web Vitals (removed web-vitals dependency)
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Performance monitoring initialized');
   }
 };

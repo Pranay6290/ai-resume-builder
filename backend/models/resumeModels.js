@@ -11,7 +11,15 @@ const ResumeSchema = new mongoose.Schema({
     required: true
   },
   template: {
+    id: { type: String, default: "01" },
+    theme: { type: String, default: "professional" },
     colorPalette: [String] // store multiple colors
+  },
+  completion: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 100
   },
   profileInfo: {
     profileImg: { type: String, default: null },
