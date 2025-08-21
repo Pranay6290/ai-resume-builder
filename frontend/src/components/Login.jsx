@@ -19,6 +19,17 @@ const Login = () => {
   e.preventDefault();
   setError("");
 
+  // Client-side validation
+  if (!email || !password) {
+    setError("Please enter both email and password");
+    return;
+  }
+
+  if (!email.includes('@')) {
+    setError("Please enter a valid email address");
+    return;
+  }
+
   console.log('🔐 Login attempt:', { email, backend: API_PATHS.AUTH.LOGIN });
 
   try {

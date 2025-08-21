@@ -7,7 +7,8 @@ const APITest = () => {
     baseURL: BASE_URL,
     healthCheck: 'Testing...',
     corsTest: 'Testing...',
-    loginTest: 'Testing...'
+    loginTest: 'Testing...',
+    validationTest: 'Testing...'
   });
 
   useEffect(() => {
@@ -64,15 +65,36 @@ const APITest = () => {
         loginTest: `⚠️ Unexpected success: ${loginResponse.status}`
       }));
     } catch (error) {
-      if (error.response && error.response.status === 401) {
+      if (error.response && (error.response.status === 400 || error.response.status === 401)) {
         setTestResults(prev => ({
           ...prev,
-          loginTest: `✅ Endpoint accessible (401 expected)`
+          loginTest: `✅ Endpoint accessible (${error.response.status} expected - ${error.response.data?.message || 'validation error'})`
         }));
       } else {
         setTestResults(prev => ({
           ...prev,
           loginTest: `❌ ${error.message} (${error.response?.status || 'No response'})`
+        }));
+      }
+    }
+
+    // Test 4: Validation Test (empty request)
+    try {
+      const validationResponse = await axiosInstance.post('/api/auth/login', {});
+      setTestResults(prev => ({
+        ...prev,
+        validationTest: `⚠️ Unexpected success: ${validationResponse.status}`
+      }));
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        setTestResults(prev => ({
+          ...prev,
+          validationTest: `✅ Validation working (400 for empty request)`
+        }));
+      } else {
+        setTestResults(prev => ({
+          ...prev,
+          validationTest: `❌ ${error.message} (${error.response?.status || 'No response'})`
         }));
       }
     }
@@ -97,6 +119,7 @@ const APITest = () => {
       <div><strong>Health Check:</strong> {testResults.healthCheck}</div>
       <div><strong>CORS Test:</strong> {testResults.corsTest}</div>
       <div><strong>Login Test:</strong> {testResults.loginTest}</div>
+      <div><strong>Validation:</strong> {testResults.validationTest}</div>
       <button 
         onClick={runTests}
         style={{
