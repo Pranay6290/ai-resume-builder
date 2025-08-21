@@ -63,8 +63,16 @@ axiosInstance.interceptors.response.use(
 
     if (error.response) {
       if (error.response.status === 401) {
-        console.log('🔐 Unauthorized - redirecting to login');
-        window.location.href = "/"; // redirect to login
+        console.log('🔐 Unauthorized response received');
+        // Only redirect to login if we're not already on login/signup pages
+        const currentPath = window.location.pathname;
+        if (currentPath !== '/' && currentPath !== '/signup' && currentPath !== '/login') {
+          console.log('🔐 Redirecting to login due to 401');
+          // Clear stored auth data
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("user");
+          window.location.href = "/";
+        }
       } else if (error.response.status === 500) {
         console.error("Server error:", error.response.data);
       }
