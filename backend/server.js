@@ -28,8 +28,7 @@ const corsOptions = {
       process.env.CORS_ORIGIN,
       process.env.FRONTEND_URL,
       // Add your deployed frontend URLs here
-      'https://your-frontend-domain.vercel.app',
-      'https://your-frontend-domain.netlify.app'
+      'https://ai-resume-builder-2-pqet.onrender.com/',
     ].filter(Boolean); // Remove undefined values
 
     if (allowedOrigins.indexOf(origin) !== -1) {
