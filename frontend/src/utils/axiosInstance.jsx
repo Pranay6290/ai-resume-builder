@@ -11,10 +11,7 @@ const axiosInstance = axios.create({
   },
 });
 
-// Debug logging
-console.log('🔧 Axios Instance Configuration:');
-console.log('baseURL:', BASE_URL);
-console.log('withCredentials:', true);
+
 
 // request interceptor
 axiosInstance.interceptors.request.use(
@@ -24,62 +21,28 @@ axiosInstance.interceptors.request.use(
       config.headers["x-auth-token"] = accessToken; // Backend expects x-auth-token, not Bearer
     }
 
-    // Debug logging for requests
-    console.log('🚀 API Request:', {
-      method: config.method?.toUpperCase(),
-      url: config.url,
-      baseURL: config.baseURL,
-      fullURL: `${config.baseURL}${config.url}`,
-      withCredentials: config.withCredentials
-    });
+
 
     return config;
   },
-  (error) => {
-    console.error('❌ Request Error:', error);
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // response interceptor
 axiosInstance.interceptors.response.use(
-  (response) => {
-    console.log('✅ API Response:', {
-      status: response.status,
-      url: response.config.url,
-      method: response.config.method?.toUpperCase()
-    });
-    return response;
-  },
+  (response) => response,
   (error) => {
-    console.error('❌ API Error:', {
-      status: error.response?.status,
-      statusText: error.response?.statusText,
-      url: error.config?.url,
-      method: error.config?.method?.toUpperCase(),
-      message: error.message,
-      response: error.response?.data
-    });
-
     if (error.response) {
       if (error.response.status === 401) {
-        console.log('🔐 Unauthorized response received');
         // Only redirect to login if we're not already on login/signup pages
         const currentPath = window.location.pathname;
         if (currentPath !== '/' && currentPath !== '/signup' && currentPath !== '/login') {
-          console.log('🔐 Redirecting to login due to 401');
           // Clear stored auth data
           localStorage.removeItem("accessToken");
           localStorage.removeItem("user");
           window.location.href = "/";
         }
-      } else if (error.response.status === 500) {
-        console.error("Server error:", error.response.data);
       }
-    } else if (error.code === "ECONNABORTED") {
-      console.error("Request timed out:", error.message);
-    } else if (error.message === 'Network Error') {
-      console.error("Network error - check if backend is running");
     }
     return Promise.reject(error);
   }

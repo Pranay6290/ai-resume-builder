@@ -12,8 +12,6 @@ import EditResume from "./components/EditResume";
 import SharedResume from "./Pages/SharedResume";
 import { Toaster } from "react-hot-toast";
 import { initPerformanceOptimizations } from "./utils/performance";
-import APITest from "./components/APITest"; // Debug component
-import AuthDebug from "./components/AuthDebug"; // Auth debug component
 import "./styles/animations.css";
 
 function App() {
@@ -49,9 +47,6 @@ function App() {
           position="top-right"
           reverseOrder={false}
         />
-        {/* Debug components - remove after testing */}
-        <APITest />
-        <AuthDebug />
         </UserProvider>
       </ThemeProvider>
     </DarkModeProvider>

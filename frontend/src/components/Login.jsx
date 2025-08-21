@@ -30,7 +30,7 @@ const Login = () => {
     return;
   }
 
-  console.log('🔐 Login attempt:', { email, backend: API_PATHS.AUTH.LOGIN });
+
 
   try {
     const res = await axiosInstance.post("/api/auth/login", { email, password });
