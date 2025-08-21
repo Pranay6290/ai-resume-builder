@@ -1,19 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, LayoutTemplate, Menu, X, Zap, Download } from "lucide-react"; 
-import { landingPageStyles } from "../assets/dummystyle";
-import { UserContext } from "../context/userContext"; 
+import {
+  ArrowRight, LayoutTemplate, Menu, X, Zap, Download,
+  Sparkles, Brain, Target, CheckCircle, Star, Users,
+  TrendingUp, Shield, Clock, Palette, FileText, Globe
+} from "lucide-react";
+import { UserContext } from "../context/userContext";
 import Modal from "../components/Modal";
-import Login from "../components/Login";          // Fixed casing
-import SignUp from "../components/SignUp";        // Fixed casing
-import { ProfileInfoCard } from "../components/Cards"; // Importing ProfileInfoCard
+import Login from "../components/Login";
+import SignUp from "../components/SignUp";
+import EnhancedButton from "../components/EnhancedButton";
 
 const LandingPage = () => {
-  const { user } = React.useContext(UserContext) || {}; 
+  const { user } = React.useContext(UserContext) || {};
   const navigate = useNavigate();
-  const [openAuthModal, setOpenAuthModal] = React.useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-  const [currentPage, setCurrentPage] = React.useState("login");  // use lowercase consistently
+  const [openAuthModal, setOpenAuthModal] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState("login");
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   const handleCTA = () => {
     if (user) {
@@ -23,32 +31,135 @@ const LandingPage = () => {
     }
   };
 
-  return (
-    <div className={landingPageStyles.container}>
-      {/* Header */}
-      <header className={landingPageStyles.header}>
-        <div className={landingPageStyles.headerContainer}>
-          {/* Logo Section */}
-          <div className={landingPageStyles.logoContainer}>
-            <div className={landingPageStyles.logoIcon}>
-              <LayoutTemplate className={landingPageStyles.logoIconInner} />
-            </div>
-            <span className={landingPageStyles.logoText}>
-              Resume Expert
-            </span>
-          </div>
+  const features = [
+    {
+      icon: Brain,
+      title: "AI-Powered Generation",
+      description: "Let our AI analyze your background and create a professional resume in seconds"
+    },
+    {
+      icon: Palette,
+      title: "Beautiful Templates",
+      description: "Choose from 16+ professionally designed themes and templates"
+    },
+    {
+      icon: Zap,
+      title: "Real-time Preview",
+      description: "See your changes instantly with our live preview feature"
+    },
+    {
+      icon: Download,
+      title: "Export Options",
+      description: "Download as PDF, PNG, or JPG with multiple quality settings"
+    },
+    {
+      icon: Shield,
+      title: "Secure & Private",
+      description: "Your data is encrypted and secure. We never share your information"
+    },
+    {
+      icon: Globe,
+      title: "Mobile Responsive",
+      description: "Create and edit resumes on any device, anywhere, anytime"
+    }
+  ];
 
-          {/* Mobile menu button */}
-          <button 
-            className={landingPageStyles.mobileMenuButton}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? (
-              <X size={24} className={landingPageStyles.mobileMenuIcon} />
-            ) : (
-              <Menu size={24} className={landingPageStyles.mobileMenuIcon} />
-            )}
-          </button>
+  const stats = [
+    { number: "50K+", label: "Resumes Created" },
+    { number: "95%", label: "Success Rate" },
+    { number: "4.9/5", label: "User Rating" },
+    { number: "24/7", label: "Support" }
+  ];
+
+  const testimonials = [
+    {
+      name: "Sarah Johnson",
+      role: "Software Engineer",
+      company: "Google",
+      text: "This AI resume builder helped me land my dream job at Google. The templates are professional and the AI suggestions were spot-on!"
+    },
+    {
+      name: "Michael Chen",
+      role: "Marketing Manager",
+      company: "Microsoft",
+      text: "I created 5 different versions of my resume in minutes. The variety of themes and the quality of output is amazing!"
+    },
+    {
+      name: "Emily Davis",
+      role: "UX Designer",
+      company: "Apple",
+      text: "The real-time preview and theme customization features are incredible. I got hired within 2 weeks of using this!"
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-fuchsia-50">
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <div className="flex items-center gap-3 animate-fade-in-up">
+              <div className="w-10 h-10 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-xl flex items-center justify-center">
+                <LayoutTemplate className="text-white" size={20} />
+              </div>
+              <span className="text-xl font-black text-gray-900">
+                AI Resume Builder
+              </span>
+            </div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-8">
+              <a href="#features" className="text-gray-600 hover:text-violet-600 transition-colors">Features</a>
+              <a href="#templates" className="text-gray-600 hover:text-violet-600 transition-colors">Templates</a>
+              <a href="#testimonials" className="text-gray-600 hover:text-violet-600 transition-colors">Reviews</a>
+              <a href="#pricing" className="text-gray-600 hover:text-violet-600 transition-colors">Pricing</a>
+            </nav>
+
+            {/* CTA Buttons */}
+            <div className="hidden md:flex items-center gap-4">
+              {user ? (
+                <EnhancedButton
+                  onClick={() => navigate("/dashboard")}
+                  variant="primary"
+                  icon={ArrowRight}
+                >
+                  Go to Dashboard
+                </EnhancedButton>
+              ) : (
+                <>
+                  <button
+                    onClick={() => {
+                      setCurrentPage("login");
+                      setOpenAuthModal(true);
+                    }}
+                    className="text-gray-600 hover:text-gray-900 transition-colors"
+                  >
+                    Sign In
+                  </button>
+                  <EnhancedButton
+                    onClick={() => {
+                      setCurrentPage("signup");
+                      setOpenAuthModal(true);
+                    }}
+                    variant="primary"
+                    icon={ArrowRight}
+                  >
+                    Get Started Free
+                  </EnhancedButton>
+                </>
+              )}
+            </div>
+
+            {/* Mobile menu button */}
+            <button
+              className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        </div>
 
           {/* Desktop navigation */}
           <div className="flex md:items-center">
@@ -69,35 +180,54 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Mobile menu open */}
+        {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className={landingPageStyles.mobileMenu}>
-            <div className={landingPageStyles.mobileMenuContainer}>
-              {user ? (
-                <div className={landingPageStyles.mobileUserInfo}>
-                  <div className={landingPageStyles.mobileUserWelcome}>
-                    Welcome, {user.name || "User"}!
-                  </div>
-                  <button 
-                    className={landingPageStyles.mobileDashboardButton} 
+          <div className="md:hidden bg-white border-t border-gray-200 animate-fade-in-down">
+            <div className="px-4 py-6 space-y-4">
+              <nav className="space-y-4">
+                <a href="#features" className="block text-gray-600 hover:text-violet-600 transition-colors">Features</a>
+                <a href="#templates" className="block text-gray-600 hover:text-violet-600 transition-colors">Templates</a>
+                <a href="#testimonials" className="block text-gray-600 hover:text-violet-600 transition-colors">Reviews</a>
+                <a href="#pricing" className="block text-gray-600 hover:text-violet-600 transition-colors">Pricing</a>
+              </nav>
+              <div className="pt-4 border-t border-gray-200 space-y-3">
+                {user ? (
+                  <EnhancedButton
                     onClick={() => {
                       navigate("/dashboard");
                       setMobileMenuOpen(false);
                     }}
+                    variant="primary"
+                    fullWidth
                   >
                     Go to Dashboard
-                  </button>
-                </div>
-              ) : (
-                <button 
-                  className={landingPageStyles.mobileAuthButton} 
-                  onClick={() => setOpenAuthModal(true)}
-                >
-                  <span className={landingPageStyles.mobileAuthButtonText}>
-                    GET Started
-                  </span>
-                </button>
-              )}
+                  </EnhancedButton>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => {
+                        setCurrentPage("login");
+                        setOpenAuthModal(true);
+                        setMobileMenuOpen(false);
+                      }}
+                      className="w-full text-center py-2 text-gray-600 hover:text-gray-900 transition-colors"
+                    >
+                      Sign In
+                    </button>
+                    <EnhancedButton
+                      onClick={() => {
+                        setCurrentPage("signup");
+                        setOpenAuthModal(true);
+                        setMobileMenuOpen(false);
+                      }}
+                      variant="primary"
+                      fullWidth
+                    >
+                      Get Started Free
+                    </EnhancedButton>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         )}

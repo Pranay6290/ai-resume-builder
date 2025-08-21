@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Eye, EyeOff, Edit, Camera, Trash2 } from 'lucide-react';
+import { Eye, EyeOff, Edit, Camera, Trash2, Check } from 'lucide-react';
 import { inputStyles, photoSelectorStyles, titleInputStyles } from '../assets/dummystyle';
 
 export const Input = ({ value, onChange, label, placeholder, type = 'text' }) => {

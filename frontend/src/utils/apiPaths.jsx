@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:4000";
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 
 // routes used for frontend
 export const API_PATHS = {
@@ -16,6 +16,7 @@ export const API_PATHS = {
     UPDATE: (id) => `${BASE_URL}/api/resumes/${id}`,      // PUT/PATCH → update resume by ID
     DELETE: (id) => `${BASE_URL}/api/resumes/${id}`,      // DELETE → delete resume by ID
     UPLOAD_IMAGES: (id) => `${BASE_URL}/api/resumes/${id}/upload-images`, // POST/PUT → upload images
+    AI_GENERATE: `${BASE_URL}/api/resumes/ai-generate`,   // POST → AI generate resume
 }
 ,
 

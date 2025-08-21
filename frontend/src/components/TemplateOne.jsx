@@ -8,19 +8,26 @@ import {
   CertificationInfo,
 } from "./ResumeSection";
 import { formatYearMonth } from "../utils/helper";
+import { colorThemes } from "../utils/data";
 
 const DEFAULT_THEME = ["#ffffff", "#0d47a1", "#1e88e5", "#64b5f6", "#bbdefb"];
 
-const Title = ({ text, color }) => (
+const Title = ({ text, color, theme }) => (
   <div className="relative w-fit mb-2 resume-section-title">
-    <h2 className="relative text-base font-bold uppercase tracking-wide pb-2" style={{ color }}>
+    <h2
+      className="relative text-base font-bold uppercase tracking-wide pb-2"
+      style={{ color: color || theme?.primary || '#0d47a1' }}
+    >
       {text}
     </h2>
-    <div className="w-full h-[2px] mt-1" style={{ backgroundColor: color }} />
+    <div
+      className="w-full h-[2px] mt-1"
+      style={{ backgroundColor: color || theme?.primary || '#0d47a1' }}
+    />
   </div>
 );
 
-const TemplateOne = ({ resumeData = {}, colorPalette, containerWidth }) => {
+const TemplateOne = ({ resumeData = {}, colorPalette, containerWidth, colorTheme, themeKey }) => {
   const {
     profileInfo = {},
     contactInfo = {},
@@ -37,6 +44,16 @@ const TemplateOne = ({ resumeData = {}, colorPalette, containerWidth }) => {
   const [baseWidth, setBaseWidth] = useState(800);
   const [scale, setScale] = useState(1);
 
+  // Get theme colors - use provided colorTheme or fall back to default
+  const theme = colorTheme || colorThemes.professional;
+  const colors = colorPalette || [
+    theme.background,
+    theme.primary,
+    theme.secondary,
+    theme.accent,
+    theme.border
+  ];
+
   useEffect(() => {
     if (resumeRef.current && containerWidth > 0) {
       const actualWidth = resumeRef.current.offsetWidth;
@@ -48,20 +65,34 @@ const TemplateOne = ({ resumeData = {}, colorPalette, containerWidth }) => {
   return (
     <div
       ref={resumeRef}
-      className="p-6 bg-white font-sans text-gray-800"
+      className="p-6 font-sans max-w-full overflow-hidden"
       style={{
         transform: containerWidth > 0 ? `scale(${scale})` : undefined,
         transformOrigin: "top left",
-        width: containerWidth > 0 ? `${baseWidth}px` : undefined,
+        width: containerWidth > 0 ? `${baseWidth}px` : "210mm", // A4 width
+        minHeight: "297mm", // A4 height
+        maxWidth: "210mm",
+        backgroundColor: theme.background,
+        color: theme.text,
+        wordWrap: "break-word",
+        overflowWrap: "break-word",
       }}
     >
       {/* Header */}
       <div className="resume-section flex justify-between items-start mb-6">
         <div>
-          <h1 className="text-3xl font-bold pb-2" >
+          <h1
+            className="text-3xl font-bold pb-2"
+            style={{ color: theme.primary }}
+          >
             {profileInfo.fullName}
           </h1>
-          <p className="text-lg font-medium pb-2">{profileInfo.designation}</p>
+          <p
+            className="text-lg font-medium pb-2"
+            style={{ color: theme.secondary }}
+          >
+            {profileInfo.designation}
+          </p>
           <div className="flex flex-wrap gap-3 text-sm">
             {contactInfo.email && (
               <div className="flex items-center">
@@ -118,7 +149,9 @@ const TemplateOne = ({ resumeData = {}, colorPalette, containerWidth }) => {
       {profileInfo.summary && (
         <div className="resume-section mb-3">
           <Title text="Professional Summary" />
-          <p className="text-sm leading-relaxed">{profileInfo.summary}</p>
+          <p className="text-sm leading-relaxed text-justify break-words hyphens-auto max-w-full overflow-hidden" style={{ wordBreak: 'break-word', overflowWrap: 'break-word', lineHeight: '1.6' }}>
+            {profileInfo.summary}
+          </p>
         </div>
       )}
 

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Zap, Award, TrendingUp, Edit,Check, Trash2, Clock } from "lucide-react";
+import { Zap, Award, TrendingUp, Edit, Check, Trash2, Clock, Share2 } from "lucide-react";
 import { UserContext } from "../context/userContext";
 import { cardStyles } from "../assets/dummystyle";
 
@@ -47,7 +47,8 @@ export const ResumeSummaryCard = ({
   updatedAt = null,
   onSelect,
   onDelete,
-  completion = 85,
+  onShare,
+  completion = 0,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -153,6 +154,16 @@ export const ResumeSummaryCard = ({
                 title="Edit"
               >
                 <Edit size={18} className={cardStyles.buttonIcon} />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onShare) onShare();
+                }}
+                className={cardStyles.shareButton || cardStyles.editButton}
+                title="Share"
+              >
+                <Share2 size={18} className={cardStyles.buttonIcon} />
               </button>
               <button
                 onClick={handleDeleteClick}

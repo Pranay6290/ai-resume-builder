@@ -227,6 +227,7 @@ export const cardStyles = {
   actionOverlay: "absolute inset-4 sm:inset-6 bg-gradient-to-t from-white/80 via-white/20 to-transparent flex items-end justify-center p-6 opacity-1 group-hover:opacity-100 transition-all duration-300 rounded-2xl",
   actionButtonsContainer: "flex gap-3",
   editButton: "group/btn w-12 h-12 flex items-center justify-center bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-2xl shadow-md hover:scale-110 transition-all duration-300",
+  shareButton: "group/btn w-12 h-12 flex items-center justify-center bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl shadow-md hover:scale-110 transition-all duration-300",
   deleteButton: "group/btn w-12 h-12 flex items-center justify-center bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl shadow-md hover:scale-110 transition-all duration-300",
   buttonIcon: "text-white group-hover/btn:scale-110 transition-transform",
 
@@ -524,5 +525,5 @@ export const infoStyles = {
   workCompany: "text-base font-semibold pb-2 text-gray-900",
   workRole: "text-base font-medium text-gray-700",
   workDuration: color => `text-sm font-bold italic`,
-  workDesc: "text-sm text-gray-600 font-medium leading-relaxed"
+  workDesc: "text-sm text-gray-600 font-medium leading-relaxed break-words hyphens-auto max-w-full overflow-hidden text-justify"
 };

@@ -50,12 +50,15 @@ const TemplateThree = ({ resumeData = {}, containerWidth }) => {
   return (
     <div
       ref={resumeRef}
-      className="bg-white font-sans a4-wrapper text-black max-w-screen-lg mx-auto"
+      className="bg-white font-sans a4-wrapper text-black max-w-full mx-auto overflow-hidden"
       style={{
         transform: containerWidth > 0 ? `scale(${scale})` : "none",
         transformOrigin: "top left",
-        width: containerWidth > 0 ? `${baseWidth}px` : "auto",
-        height: "auto",
+        width: containerWidth > 0 ? `${baseWidth}px` : "210mm",
+        minHeight: "297mm",
+        maxWidth: "210mm",
+        wordWrap: "break-word",
+        overflowWrap: "break-word",
       }}
     >
       {/* Header Section */}
@@ -69,7 +72,7 @@ const TemplateThree = ({ resumeData = {}, containerWidth }) => {
 
         </div>
 
-        <p className="text-sm text-gray-700 leading-tight mb-4">
+        <p className="text-sm text-gray-700 leading-tight mb-4 text-justify break-words hyphens-auto max-w-full overflow-hidden" style={{ wordBreak: 'break-word', overflowWrap: 'break-word', lineHeight: '1.5' }}>
           {profileInfo.summary}
         </p>
       </header>

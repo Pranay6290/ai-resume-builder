@@ -1,13 +1,19 @@
 {
-  "name": "frontend",
+  "name": "ai-resume-builder-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "Frontend for AI Resume Builder - A full-stack portfolio project",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "vite preview --port 4173"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.12",

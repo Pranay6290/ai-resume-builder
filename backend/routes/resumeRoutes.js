@@ -1,12 +1,13 @@
 import express from "express";
 import { protect } from "../middleware/authMiddleware.js";
-import { 
-  createResume, 
-  getUserResumes, 
-  getResumeById, 
-  updateResume, 
-  uploadResumeImage, 
-  deleteResume 
+import {
+  createResume,
+  getUserResumes,
+  getResumeById,
+  updateResume,
+  uploadResumeImage,
+  deleteResume,
+  generateAIResume
 } from "../controllers/resumeController.js";
 import upload from "../middleware/uploadMiddleware.js";
 
@@ -42,6 +43,9 @@ resumeRouter.post(
 
 
 // Delete resume
-resumeRouter.delete("/:resumeId", protect, deleteResume);
+resumeRouter.delete("/:id", protect, deleteResume);
+
+// AI Resume Generation
+resumeRouter.post("/ai-generate", protect, generateAIResume);
 
 export default resumeRouter;

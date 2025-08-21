@@ -33,13 +33,16 @@ const TemplateTwo = ({ resumeData = {}, containerWidth }) => {
   return (
     <div
       ref={resumeRef}
-      className="resume-section p-4 bg-white font-sans text-black max-w-4xl mx-auto"
+      className="resume-section p-4 bg-white font-sans text-black max-w-full mx-auto overflow-hidden"
       style={{
         transform: containerWidth > 0 ? `scale(${scale})` : undefined,
         transformOrigin: "top left",
-        width: containerWidth > 0 ? `${baseWidth}px` : undefined,
-        height: "1123px",
+        width: containerWidth > 0 ? `${baseWidth}px` : "210mm",
+        minHeight: "297mm",
+        maxWidth: "210mm",
         overflow: "hidden",
+        wordWrap: "break-word",
+        overflowWrap: "break-word",
       }}
     >
       {/* Header Section */}
@@ -77,7 +80,9 @@ const TemplateTwo = ({ resumeData = {}, containerWidth }) => {
       {profileInfo.summary && (
         <section className="mb-2">
           <h2 className={sectionTitleClass}>Summary</h2>
-          <p className="text-[11px] text-gray-800 leading-tight">{profileInfo.summary}</p>
+          <p className="text-[11px] text-gray-800 leading-tight text-justify break-words hyphens-auto max-w-full overflow-hidden" style={{ wordBreak: 'break-word', overflowWrap: 'break-word', lineHeight: '1.4' }}>
+            {profileInfo.summary}
+          </p>
         </section>
       )}
 

@@ -172,57 +172,138 @@ export const CertificationInfoForm = ({ certifications, updateArrayItem, addArra
 
 // ContactInfoForm Component
 export const ContactInfoForm = ({ contactInfo, updateSection }) => {
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone) => {
+    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+    return phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''));
+  };
+
+  const validateURL = (url) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
   return (
     <div className={contactInfoStyles.container}>
       <h2 className={contactInfoStyles.heading}>Contact Information</h2>
+      <p className="text-gray-600 mb-6">
+        Add your contact details so employers can reach you easily. All fields are optional but recommended.
+      </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Email - Most Important */}
+        <div className="md:col-span-1">
+          <Input
+            label="Email Address *"
+            placeholder="john.doe@example.com"
+            type="email"
+            value={contactInfo.email || ""}
+            onChange={({ target }) => updateSection("email", target.value)}
+          />
+          {contactInfo.email && !validateEmail(contactInfo.email) && (
+            <p className="text-red-500 text-sm mt-1">Please enter a valid email address</p>
+          )}
+        </div>
+
+        {/* Phone Number */}
+        <div className="md:col-span-1">
+          <Input
+            label="Phone Number *"
+            placeholder="+1 (555) 123-4567"
+            value={contactInfo.phone || ""}
+            onChange={({ target }) => updateSection("phone", target.value)}
+          />
+          {contactInfo.phone && !validatePhone(contactInfo.phone) && (
+            <p className="text-red-500 text-sm mt-1">Please enter a valid phone number</p>
+          )}
+        </div>
+
+        {/* Location */}
         <div className="md:col-span-2">
           <Input
-            label="Address"
-            placeholder="Short Address"
+            label="Location"
+            placeholder="City, State/Province, Country (e.g., San Francisco, CA, USA)"
             value={contactInfo.location || ""}
             onChange={({ target }) => updateSection("location", target.value)}
           />
         </div>
 
-        <Input
-          label="Email"
-          placeholder="john@example.com"
-          type="email"
-          value={contactInfo.email || ""}
-          onChange={({ target }) => updateSection("email", target.value)}
-        />
+        {/* LinkedIn */}
+        <div className="md:col-span-1">
+          <Input
+            label="LinkedIn Profile"
+            placeholder="https://linkedin.com/in/johndoe"
+            value={contactInfo.linkedin || ""}
+            onChange={({ target }) => updateSection("linkedin", target.value)}
+          />
+          {contactInfo.linkedin && contactInfo.linkedin.length > 0 && !validateURL(contactInfo.linkedin) && (
+            <p className="text-red-500 text-sm mt-1">Please enter a valid LinkedIn URL</p>
+          )}
+        </div>
 
-        <Input
-          label="Phone Number"
-          placeholder="1234567890"
-          value={contactInfo.phone || ""}
-          onChange={({ target }) => updateSection("phone", target.value)}
-        />
+        {/* GitHub */}
+        <div className="md:col-span-1">
+          <Input
+            label="GitHub Profile"
+            placeholder="https://github.com/johndoe"
+            value={contactInfo.github || ""}
+            onChange={({ target }) => updateSection("github", target.value)}
+          />
+          {contactInfo.github && contactInfo.github.length > 0 && !validateURL(contactInfo.github) && (
+            <p className="text-red-500 text-sm mt-1">Please enter a valid GitHub URL</p>
+          )}
+        </div>
 
-        <Input
-          label="LinkedIn"
-          placeholder="https://linkedin.com/in/username"
-          value={contactInfo.linkedin || ""}
-          onChange={({ target }) => updateSection("linkedin", target.value)}
-        />
-
-        <Input
-          label="GitHub"
-          placeholder="https://github.com/username"
-          value={contactInfo.github || ""}
-          onChange={({ target }) => updateSection("github", target.value)}
-        />
-
+        {/* Portfolio/Website */}
         <div className="md:col-span-2">
           <Input
-            label="Portfolio / Website"
-            placeholder="https://yourwebsite.com"
+            label="Portfolio / Personal Website"
+            placeholder="https://johndoe.dev"
             value={contactInfo.website || ""}
             onChange={({ target }) => updateSection("website", target.value)}
           />
+          {contactInfo.website && contactInfo.website.length > 0 && !validateURL(contactInfo.website) && (
+            <p className="text-red-500 text-sm mt-1">Please enter a valid website URL</p>
+          )}
         </div>
+
+        {/* Additional Contact Options */}
+        <div className="md:col-span-1">
+          <Input
+            label="Twitter/X Profile (Optional)"
+            placeholder="https://twitter.com/johndoe"
+            value={contactInfo.twitter || ""}
+            onChange={({ target }) => updateSection("twitter", target.value)}
+          />
+        </div>
+
+        <div className="md:col-span-1">
+          <Input
+            label="Other Profile (Optional)"
+            placeholder="https://stackoverflow.com/users/johndoe"
+            value={contactInfo.other || ""}
+            onChange={({ target }) => updateSection("other", target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Contact Tips */}
+      <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+        <h3 className="font-semibold text-blue-900 mb-2">💡 Contact Information Tips</h3>
+        <ul className="text-sm text-blue-800 space-y-1">
+          <li>• Use a professional email address (avoid nicknames or numbers)</li>
+          <li>• Include your country code for international applications</li>
+          <li>• Make sure your LinkedIn profile is up-to-date and professional</li>
+          <li>• Only include social media profiles relevant to your profession</li>
+        </ul>
       </div>
     </div>
   );
