@@ -11,10 +11,7 @@ export const connectDB = async () => {
       console.warn("⚠️  MONGO_URI not found in environment variables, using default local connection");
     }
 
-    await mongoose.connect(mongoURI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(mongoURI);
     console.log("✅ MongoDB connected successfully");
     console.log(`📍 Connected to: ${mongoURI.replace(/\/\/.*@/, '//***:***@')}`); // Hide credentials in logs
   } catch (error) {
